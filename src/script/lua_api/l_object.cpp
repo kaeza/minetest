@@ -809,6 +809,8 @@ int ObjectRef::l_get_player_control(lua_State *L)
 	lua_setfield(L, -2, "LMB");
 	lua_pushboolean(L, control.RMB);
 	lua_setfield(L, -2, "RMB");
+	lua_pushboolean(L, control.crouch);
+	lua_setfield(L, -2, "crouch");
 	return 1;
 }
 

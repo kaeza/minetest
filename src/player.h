@@ -39,6 +39,7 @@ struct PlayerControl
 		jump = false;
 		aux1 = false;
 		sneak = false;
+		crouch = false;
 		LMB = false;
 		RMB = false;
 		pitch = 0;
@@ -52,6 +53,7 @@ struct PlayerControl
 		bool a_jump,
 		bool a_aux1,
 		bool a_sneak,
+		bool a_crouch,
 		bool a_LMB,
 		bool a_RMB,
 		float a_pitch,
@@ -65,6 +67,7 @@ struct PlayerControl
 		jump = a_jump;
 		aux1 = a_aux1;
 		sneak = a_sneak;
+		crouch = a_crouch;
 		LMB = a_LMB;
 		RMB = a_RMB;
 		pitch = a_pitch;
@@ -77,6 +80,7 @@ struct PlayerControl
 	bool jump;
 	bool aux1;
 	bool sneak;
+	bool crouch;
 	bool LMB;
 	bool RMB;
 	float pitch;
@@ -124,7 +128,9 @@ public:
 		// This is at the height of the eyes of the current figure
 		// return v3f(0, BS*1.5, 0);
 		// This is more like in minecraft
-		if(camera_barely_in_ceiling)
+		if (control.crouch)
+			return v3f(0,BS*0.8,0);
+		else if (camera_barely_in_ceiling)
 			return v3f(0,BS*1.5,0);
 		else
 			return v3f(0,BS*1.625,0);
@@ -244,6 +250,7 @@ public:
 	u8 liquid_viscosity;
 	bool is_climbing;
 	bool swimming_vertical;
+	bool is_crouching;
 	bool camera_barely_in_ceiling;
 	
 	u8 light;

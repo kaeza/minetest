@@ -2175,6 +2175,7 @@ void the_game(
 				input->isKeyDown(getKeySetting("keymap_jump")),
 				input->isKeyDown(getKeySetting("keymap_special1")),
 				input->isKeyDown(getKeySetting("keymap_sneak")),
+				input->isKeyDown(getKeySetting("keymap_crouch")),
 				input->getLeftState(),
 				input->getRightState(),
 				camera_pitch,
@@ -2189,6 +2190,7 @@ void the_game(
 			16*(int)input->isKeyDown(getKeySetting("keymap_jump"))+
 			32*(int)input->isKeyDown(getKeySetting("keymap_special1"))+
 			64*(int)input->isKeyDown(getKeySetting("keymap_sneak"))+
+			64*(int)input->isKeyDown(getKeySetting("keymap_crouch"))+
 			128*(int)input->getLeftState()+
 			256*(int)input->getRightState();
 			LocalPlayer* player = client.getEnv().getLocalPlayer();
