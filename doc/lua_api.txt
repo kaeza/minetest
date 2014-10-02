@@ -2444,6 +2444,17 @@ Node definition (register_node)
         dug = <SimpleSoundSpec>,
         place = <SimpleSoundSpec>,
     },
+    drop = "", -- Name of dropped node when dug. Default is the node itself.
+    -- Alternatively:
+    drop = {
+        max_items = 1, -- Maximum number of items to drop.
+        items = { -- Choose max_items randomly from this list.
+            {
+                items = { "foo:bar", "baz:frob" }, -- Choose one item randomly from this list.
+                rarity = 1, -- Probability of getting is 1/rarity.
+            },
+        },
+    },
 
     on_construct = func(pos),
     ^ Node constructor; always called after adding node
