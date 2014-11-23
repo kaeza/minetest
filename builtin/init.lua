@@ -17,7 +17,10 @@ local gamepath = scriptdir.."game"..DIR_DELIM
 local commonpath = scriptdir.."common"..DIR_DELIM
 local asyncpath = scriptdir.."async"..DIR_DELIM
 
-dofile(commonpath.."strict.lua")
+if core.setting_get("enable_strict_mod_debug") then
+	dofile(commonpath.."strict.lua")
+end
+
 dofile(commonpath.."serialize.lua")
 dofile(commonpath.."misc_helpers.lua")
 

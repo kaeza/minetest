@@ -11,18 +11,25 @@ end
 
 local meta = {}
 local declared = {}
-local alreadywarned = {}
+
+local already_warned_write = {}
+local already_warned_read = {}
 
 function meta:__newindex(name, value)
 	local info = debug.getinfo(2, "Sl")
-	local desc = ("%s:%d"):format(info.short_src, info.currentline)
-	if not declared[name] then
+	local file, line = info.short_src, info.currentline
+	local desc = ("%s:%d"):format(file, line)
+	local already_warned_table = already_warned_write[file]
+	if not already_warned_table then
+		already_warned_table = { }
+		already_warned_write[file] = already_warned_table
+	end
+	if not (declared[name] and already_warned_table[line]) then
 		if info.what ~= "main" and info.what ~= "C" then
 			warn(("Assignment to undeclared global %q inside"
-					.." a function at %s.")
-				:format(name, desc))
+					.." a function at %s."):format(name, desc))
 		end
-		declared[name] = true
+		already_warned_table[line] = true
 	end
 	-- Ignore mod namespaces
 	if WARN_INIT and (not core.get_current_modname or
@@ -30,19 +37,26 @@ function meta:__newindex(name, value)
 		warn(("Global variable %q created at %s.")
 			:format(name, desc))
 	end
+	declared[name] = true
 	rawset(self, name, value)
 end
 
 
 function meta:__index(name)
 	local info = debug.getinfo(2, "Sl")
-	if not declared[name] and info.what ~= "C" and not alreadywarned[name] then
+	local file, line = info.short_src, info.currentline
+	local already_warned_table = already_warned_read[file]
+	if not already_warned_table then
+		already_warned_table = { }
+		already_warned_read[file] = already_warned_table
+	end
+	if not declared[name] and info.what ~= "C"
+			and not already_warned_table[line] then
 		warn(("Undeclared global variable %q accessed at %s:%s")
-				:format(name, info.short_src, info.currentline))
-		alreadywarned[name] = true
+				:format(name, file, line))
+		already_warned_table[line] = true
 	end
 	return rawget(self, name)
 end
 
 setmetatable(_G, meta)
-
